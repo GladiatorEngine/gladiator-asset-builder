@@ -41,7 +41,7 @@ gladiator-asset-builder pack extract-texture -o texture_extracted.gea pack.gea 0
 ```shell
 gladiator-asset-builder model build --vertices vertices.json -o model.gea
 ```
-#### verticies.json
+#### vertices.json
 ```json
 [
     [-0.5, 0.5, 0.5, 1],
@@ -54,7 +54,7 @@ gladiator-asset-builder model build --vertices vertices.json -o model.gea
     [0.5, 0.5, -0.5, 1]
 ]
 ```
-### Export model to verices JSON
+### Export model to vertices JSON
 ```shell
 gladiator-asset-builder model to-vertices-json model.gea --output-path vertices_exported.json
 ```
