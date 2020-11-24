@@ -11,7 +11,7 @@ struct GladiatorAssetBuilder: ParsableCommand {
         // Commands can define a version for automatic '--version' support.
         version: "1.0.0",
         
-        subcommands: [BuildTexture.self, Pack.self])
+        subcommands: [Texture.self, Pack.self])
 }
 
 struct OutputOptions: ParsableArguments {
@@ -20,7 +20,25 @@ struct OutputOptions: ParsableArguments {
 }
 
 extension GladiatorAssetBuilder {
-    struct BuildTexture: ParsableCommand {
+    struct Texture: ParsableCommand {
+        static var configuration = CommandConfiguration(
+            abstract: "Work with textures",
+            subcommands: [Build.self, ToPNG.self]
+        )
+    }
+    
+    struct Pack: ParsableCommand {
+        static var configuration = CommandConfiguration(
+            abstract: "Work with pack",
+            subcommands: [Build.self, Index.self, ExtractTexture.self]
+        )
+    }
+}
+
+// MARK: - Texture
+
+extension GladiatorAssetBuilder.Texture {
+    struct Build: ParsableCommand {
         static var configuration = CommandConfiguration(abstract: "Builds GEA-texture for the engine")
 
         @Option(name: .shortAndLong, help: "PNG texture path")
@@ -44,12 +62,17 @@ extension GladiatorAssetBuilder {
             // Add raw pixels
             print("Appending Texture data with \(rgbas.count) pixels")
             
-            for (index, rgbaLine) in rgbas.chunked(into: x).enumerated() {
-                print("* Line \(index) is started!")
+            for rgbaLine in rgbas.chunked(into: x) {
                 var lineData = Data()
                 for rgba in rgbaLine {
-                    // Add alpha/red/green/blue
-                    lineData = lineData + withUnsafeBytes(of: rgba.argb) { Data($0) }
+                    var pixelData = Data()
+                    // Add RGBA
+                    pixelData = pixelData + withUnsafeBytes(of: rgba.r) { Data($0) }
+                    pixelData = pixelData + withUnsafeBytes(of: rgba.g) { Data($0) }
+                    pixelData = pixelData + withUnsafeBytes(of: rgba.b) { Data($0) }
+                    pixelData = pixelData + withUnsafeBytes(of: rgba.a) { Data($0) }
+                    // Add to lineData
+                    lineData = lineData + pixelData
                 }
                 data = data + lineData
             }
@@ -59,11 +82,65 @@ extension GladiatorAssetBuilder {
         }
     }
     
-    struct Pack: ParsableCommand {
-        static var configuration = CommandConfiguration(
-            abstract: "Work with pack",
-            subcommands: [Build.self, Index.self, ExtractTexture.self]
-        )
+    struct TextureOptions: ParsableArguments {
+        @Argument(help: "Texture path")
+        var texture: String
+    }
+    
+    struct ToPNG: ParsableCommand {
+        static var configuration = CommandConfiguration(abstract: "Converts GEA-texture to PNG")
+
+        @OptionGroup
+        var options: TextureOptions
+        
+        @OptionGroup
+        var outputOptions: OutputOptions
+
+        mutating func run() throws {
+            var manager = GladiatorAssetManager()
+            try manager.loadTextureAsset(path: options.texture)
+            
+            let rawData = manager.textures[0].assetData()
+            
+            let width = rawData.subdata(in: 0..<MemoryLayout<Int>.size).withUnsafeBytes {
+                $0.load(as: Int.self)
+            }
+            let height = rawData.subdata(in: MemoryLayout<Int>.size..<MemoryLayout<Int>.size*2).withUnsafeBytes {
+                $0.load(as: Int.self)
+            }
+            
+            let pixelsData = rawData.subdata(in: MemoryLayout<Int>.size*2..<rawData.endIndex)
+            
+            var rgbas = [PNG.RGBA<UInt16>]()
+            
+            for y in 0..<height {
+                var line = [PNG.RGBA<UInt16>]()
+                for x in 0..<width {
+                    func getPixelPropertyValue(i: Int, data: Data) -> UInt16 {
+                        data.subdata(in: MemoryLayout<UInt16>.size*i..<MemoryLayout<UInt16>.size*(i+1)).withUnsafeBytes {
+                            $0.load(as: UInt16.self)
+                        }
+                    }
+                    func getPixelProperties(data: Data) -> [UInt16] {
+                        return [
+                            getPixelPropertyValue(i: 0, data: data),
+                            getPixelPropertyValue(i: 1, data: data),
+                            getPixelPropertyValue(i: 2, data: data),
+                            getPixelPropertyValue(i: 3, data: data),
+                        ]
+                    }
+                    let i = (x+1)*(y+1)-1
+                    let pixelData = pixelsData.subdata(in: MemoryLayout<UInt16>.size*i*4..<MemoryLayout<UInt16>.size*(i+1)*4)
+                    let pixelProps = getPixelProperties(data: pixelData)
+                    let pixel = PNG.RGBA<UInt16>(pixelProps[0], pixelProps[1], pixelProps[2], pixelProps[3])
+                    line.append(pixel)
+                }
+                rgbas = rgbas + line
+                print("Line \(y) is done!")
+            }
+            
+            try PNG.encode(rgba: rgbas, size: (width, height), as: .rgba16, path: outputOptions.outputPath)
+        }
     }
 }
 
