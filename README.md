@@ -37,3 +37,24 @@ gladiator-asset-builder pack index pack.gea
 ## Texture #2 - 201046 bytes
 gladiator-asset-builder pack extract-texture -o texture_extracted.gea pack.gea 0
 ```
+### Create model from vertices
+```shell
+gladiator-asset-builder model build --vertices vertices.json -o model.gea
+```
+#### verticies.json
+```json
+[
+    [-0.5, 0.5, 0.5, 1],
+    [-0.5, -0.5, 0.5, 1],
+    [0.5, -0.5, 0.5, 1],
+    [0.5, 0.5, 0.5, 1],
+    [-0.5, 0.5,-0.5, 1],
+    [-0.5, -0.5, -0.5, 1],
+    [0.5, -0.5, -0.5, 1],
+    [0.5, 0.5, -0.5, 1]
+]
+```
+### Export model to verices JSON
+```shell
+gladiator-asset-builder model to-vertices-json model.gea --output-path vertices_exported.json
+```
