@@ -12,8 +12,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/GladiatorEngine/GladiatorAssetManager", .branch("main")),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.3.0"),
-        .package(url: "https://github.com/kelvin13/PNG", .exact("3.0.1"))
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.3.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -22,8 +21,7 @@ let package = Package(
             name: "gladiator-asset-builder",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .product(name: "GladiatorAssetManager", package: "GladiatorAssetManager"),
-                .product(name: "PNG", package: "PNG")
+                .product(name: "GladiatorAssetManager", package: "GladiatorAssetManager")
             ]),
         .testTarget(
             name: "AssetBuilderTests",
