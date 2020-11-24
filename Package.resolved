@@ -1,0 +1,43 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "GladiatorAssetManager",
+        "repositoryURL": "https://github.com/GladiatorEngine/GladiatorAssetManager",
+        "state": {
+          "branch": "main",
+          "revision": "bee46c0c4d2b4f675062066c65f5877140d348e3",
+          "version": null
+        }
+      },
+      {
+        "package": "PNG",
+        "repositoryURL": "https://github.com/kelvin13/PNG",
+        "state": {
+          "branch": null,
+          "revision": "a43eb1ae20cc0855537be5020514b0aa68af2007",
+          "version": "3.0.1"
+        }
+      },
+      {
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser",
+        "state": {
+          "branch": null,
+          "revision": "92646c0cdbaca076c8d3d0207891785b3379cbff",
+          "version": "0.3.1"
+        }
+      },
+      {
+        "package": "swift-crypto",
+        "repositoryURL": "https://github.com/apple/swift-crypto.git",
+        "state": {
+          "branch": null,
+          "revision": "9680b7251cd2be22caaed8f1468bd9e8915a62fb",
+          "version": "1.1.2"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
