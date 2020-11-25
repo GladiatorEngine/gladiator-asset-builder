@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import GladiatorAssetManager
+import AssetManager
 import ArgumentParser
 
 extension GladiatorAssetBuilder {
@@ -34,9 +34,9 @@ extension GladiatorAssetBuilder.Pack {
                 return RawAsset(rawData: d.subdata(in: 0..<d.endIndex-64))
             }
             
-            let pack = GladiatorAssetManager.buildAssetPackData(assets: assets)
+            let pack = AssetManager.buildAssetPackData(assets: assets)
 
-            GladiatorAssetManager.saveAsset(path: options.outputPath, type: .pack, data: pack)
+            AssetManager.saveAsset(path: options.outputPath, type: .pack, data: pack)
         }
     }
     
@@ -50,7 +50,7 @@ extension GladiatorAssetBuilder.Pack {
         var options: PackOptions
 
         mutating func run() throws {
-            var manager = GladiatorAssetManager()
+            var manager = AssetManager()
             try manager.loadAssetPack(path: options.pack)
             
             print("Textures: ")
@@ -71,11 +71,11 @@ extension GladiatorAssetBuilder.Pack {
         var textureID: Int
 
         mutating func run() throws {
-            var manager = GladiatorAssetManager()
+            var manager = AssetManager()
             try manager.loadAssetPack(path: options.pack)
             
             if let texture = manager.textures[safe: textureID] {
-                GladiatorAssetManager.saveAsset(path: outputOptions.outputPath, asset: texture)
+                AssetManager.saveAsset(path: outputOptions.outputPath, asset: texture)
             } else {
                 throw AssetBuilderError.assetNotFound(type: .texture, id: textureID)
             }

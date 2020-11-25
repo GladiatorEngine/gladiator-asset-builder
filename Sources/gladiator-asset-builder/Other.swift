@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import GladiatorAssetManager
+import AssetManager
 
 // MARK: - Extensions
 

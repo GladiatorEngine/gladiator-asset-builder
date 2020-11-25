@@ -7,7 +7,7 @@
 
 import Foundation
 import ArgumentParser
-import GladiatorAssetManager
+import AssetManager
 
 extension GladiatorAssetBuilder {
     struct Texture: ParsableCommand {
@@ -30,7 +30,7 @@ extension GladiatorAssetBuilder.Texture {
 
         mutating func run() throws {
             let texture = Texture(sourceData: try Data(contentsOf: URL(fileURLWithPath: png)))
-            GladiatorAssetManager.saveAsset(path: options.outputPath, asset: texture)
+            AssetManager.saveAsset(path: options.outputPath, asset: texture)
         }
     }
     
@@ -49,7 +49,7 @@ extension GladiatorAssetBuilder.Texture {
         var outputOptions: OutputOptions
 
         mutating func run() throws {
-            var manager = GladiatorAssetManager()
+            var manager = AssetManager()
             try manager.loadTextureAsset(path: options.texture)
             
             let rawData = manager.textures[0].assetData()

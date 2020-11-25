@@ -1,6 +1,6 @@
 import Foundation
 import ArgumentParser
-import GladiatorAssetManager
+import AssetManager
 
 struct GladiatorAssetBuilder: ParsableCommand {
     static var configuration = CommandConfiguration(

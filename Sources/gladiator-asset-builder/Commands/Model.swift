@@ -7,7 +7,7 @@
 
 import Foundation
 import ArgumentParser
-import GladiatorAssetManager
+import AssetManager
 
 extension GladiatorAssetBuilder {
     struct Model: ParsableCommand {
@@ -34,7 +34,7 @@ extension GladiatorAssetBuilder.Model {
             let vertices = try JSONDecoder().decode([[Float]].self, from: jsonData)
             
             let model = Model(vertices: vertices)
-            GladiatorAssetManager.saveAsset(path: options.outputPath, asset: model)
+            AssetManager.saveAsset(path: options.outputPath, asset: model)
         }
     }
     
@@ -53,7 +53,7 @@ extension GladiatorAssetBuilder.Model {
         var outputOptions: OutputOptions
 
         mutating func run() throws {
-            var manager = GladiatorAssetManager()
+            var manager = AssetManager()
             try manager.loadModelAsset(path: options.model)
             
             let data = try JSONEncoder().encode(manager.models[0].vertices)

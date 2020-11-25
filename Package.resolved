@@ -2,11 +2,11 @@
   "object": {
     "pins": [
       {
-        "package": "GladiatorAssetManager",
-        "repositoryURL": "https://github.com/GladiatorEngine/GladiatorAssetManager",
+        "package": "GladiatorEngine",
+        "repositoryURL": "https://github.com/GladiatorEngine/GladiatorEngine",
         "state": {
           "branch": "main",
-          "revision": "8c0f344336e7d32f7c6fa8e32073305ff90f062e",
+          "revision": "e3618774159890276194b92812ca2ffd56960b71",
           "version": null
         }
       },
